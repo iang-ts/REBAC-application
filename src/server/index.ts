@@ -1,10 +1,11 @@
 import express from 'express';
+import { makeAuthMiddleware } from '../factories/makeAuthMiddleware';
+import { makeIsAdminMiddleware } from '../factories/makeIsAdminMiddleware';
+import { makeListLeadsController } from '../factories/makeListLeadsController';
 import { makeSignInController } from '../factories/makeSignInController';
 import { makeSignUpController } from '../factories/makeSignUpController';
-import { routeAdapter } from './adapters/routeAdapter';
-import { makeListLeadsController } from '../factories/makeListLeadsController';
 import { middelwareAdapter } from './adapters/middelwareAdapter';
-import { makeAuthMiddleware } from '../factories/makeAuthMiddleware';
+import { routeAdapter } from './adapters/routeAdapter';
 
 const app = express();
 
@@ -17,6 +18,15 @@ app.get(
 	'/leads',
 	middelwareAdapter(makeAuthMiddleware()),
 	routeAdapter(makeListLeadsController()),
+);
+
+app.post(
+	'/leads',
+	middelwareAdapter(makeAuthMiddleware()),
+	async (req, res) => {
+		console.log(req.metadata?.account?.role);
+		res.json({ create: true });
+	},
 );
 
 app.listen(3001, () => {
