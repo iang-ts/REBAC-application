@@ -1,4 +1,4 @@
-import { verify } from 'jsonwebtoken';
+import { verify, type JwtPayload } from 'jsonwebtoken';
 
 import {
 	IData,
@@ -26,11 +26,14 @@ export class AuthMiddleware implements IMiddleware {
 			if (bearer !== 'Bearer') {
 				throw new Error();
 			}
-			const payload = verify(token, env.jwtSecret);
+			const payload = verify(token, env.jwtSecret) as JwtPayload;
 
 			return {
 				data: {
-					accountId: payload.sub,
+					account: {
+						id: payload.sub,
+						role: payload.role,
+					},
 				},
 			};
 		} catch {
