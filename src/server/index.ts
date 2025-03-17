@@ -1,11 +1,11 @@
 import express from 'express';
 import { makeAuthMiddleware } from '../factories/makeAuthMiddleware';
-import { makeIsAdminMiddleware } from '../factories/makeIsAdminMiddleware';
 import { makeListLeadsController } from '../factories/makeListLeadsController';
 import { makeSignInController } from '../factories/makeSignInController';
 import { makeSignUpController } from '../factories/makeSignUpController';
 import { middelwareAdapter } from './adapters/middelwareAdapter';
 import { routeAdapter } from './adapters/routeAdapter';
+import { makeAuthorizationMiddleware } from '../factories/makeAuthorizationMiddleware';
 
 const app = express();
 
@@ -23,6 +23,7 @@ app.get(
 app.post(
 	'/leads',
 	middelwareAdapter(makeAuthMiddleware()),
+	middelwareAdapter(makeAuthorizationMiddleware()),
 	async (req, res) => {
 		console.log(req.metadata?.account?.role);
 		res.json({ create: true });
