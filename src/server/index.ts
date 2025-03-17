@@ -23,7 +23,7 @@ app.get(
 app.post(
 	'/leads',
 	middelwareAdapter(makeAuthMiddleware()),
-	middelwareAdapter(makeAuthorizationMiddleware()),
+	middelwareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
 	async (req, res) => {
 		console.log(req.metadata?.account?.role);
 		res.json({ create: true });
